@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block body %}{% include "admin/_nav.html" %}
+<h1>Trips</h1>
+<form class="card grid" method="post">
+ <label>Train<select name="train_id"><option value="">All active trains</option>{% for t in trains %}<option value="{{ t.train_id }}">{{ t.train_number }} {{ t.train_name }}</option>{% endfor %}</select></label>
+ <label>Start date<input type="date" name="start" required></label>
+ <label>Days<input type="number" name="days" value="10" min="1" max="120" required></label><button>Generate trips</button></form>
+<table><tr><th>Date</th><th>Train</th><th>Status</th><th>Tickets</th><th></th></tr>
+{% for t in rows %}<tr><td>{{ t.journey_date }}</td><td>{{ t.train_number }} {{ t.train_name }}</td><td>{{ t.status }}</td><td>{{ t.sold }}</td>
+<td>{% if t.status == 'SCHEDULED' %}<form method="post" action="{{ url_for('admin.cancel_trip', trip_id=t.trip_id) }}" onsubmit="return confirm('Cancel this trip?')"><button class="danger">Cancel</button></form>{% endif %}</td></tr>{% endfor %}</table>
+{% endblock %}

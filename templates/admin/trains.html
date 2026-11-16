@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block body %}{% include "admin/_nav.html" %}
+<h1>Trains</h1>
+<table><tr><th>No.</th><th>Name</th><th>Type</th><th>Stops</th><th>Coaches</th><th>Active</th><th></th></tr>
+{% for t in rows %}<tr><td>{{ t.train_number }}</td><td>{{ t.train_name }}</td><td>{{ t.train_type }}</td><td>{{ t.stops }}</td><td>{{ t.coaches }}</td><td>{{ 'Yes' if t.is_active else 'No' }}</td>
+<td><a class="btn" href="{{ url_for('admin.train', tid=t.train_id) }}">Manage</a>
+<form method="post" action="{{ url_for('admin.toggle_train', tid=t.train_id) }}" style="display:inline"><button>Toggle</button></form></td></tr>{% endfor %}</table>
+<h2>Add train</h2>
+<form class="card grid" method="post">
+ <label>Number<input name="train_number" required></label><label>Name<input name="train_name" required></label>
+ <label>Type<select name="train_type"><option>INTERCITY</option><option>MAIL_EXPRESS</option><option>COMMUTER</option><option>LOCAL</option></select></label>
+ <label>Off day<select name="off_day"><option value="">None (daily)</option><option value="0">Sunday</option><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option></select></label>
+ <button>Add</button></form>{% endblock %}

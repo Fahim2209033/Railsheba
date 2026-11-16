@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block body %}
+<h1 class="page-title">My Tickets</h1>
+{% if not rows %}<div class="card">No tickets yet. <a href="{{ url_for('index') }}">Book a train</a></div>{% endif %}
+{% for k in rows %}<div class="card tk {{ k.status|lower }}">
+ <div><h3>{{ k.train_name|upper }} ({{ k.train_number }}) <span class="tag {{ k.status|lower }}">{{ k.status }}</span></h3>
+  {{ k.from_station.split(' (')[0] }} → {{ k.to_station.split(' (')[0] }} · {{ k.journey_date.strftime('%d %b %Y') }} · {{ k.departure_time.strftime('%I:%M %p') }}<br>
+  <span class="muted">Seat {{ k.coach_code }}-{{ k.seat_number }} ({{ k.class_code }}) · {{ k.passenger_name }} · ৳{{ k.fare_amount }} · {{ k.ticket_no }}</span></div>
+ <div><a class="btn light" href="{{ url_for('ticket_page', ticket_id=k.ticket_id) }}">View / Print</a>
+ {% if k.status == 'ISSUED' and k.upcoming %}<form method="post" action="{{ url_for('cancel', ticket_id=k.ticket_id) }}" style="display:inline" onsubmit="return confirm('Cancel this ticket?')"><button class="danger">Cancel</button></form>{% endif %}</div>
+</div>{% endfor %}{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block body %}{% include "admin/_nav.html" %}
+<h1>Stations</h1>
+<form class="card grid" method="post">
+ <label>Code<input name="station_code" maxlength="10" required></label>
+ <label>Name<input name="station_name" required></label>
+ <label>District<input name="district"></label><button>Add station</button></form>
+<table><tr><th>Code</th><th>Name</th><th>District</th></tr>
+{% for s in rows %}<tr><td>{{ s.station_code }}</td><td>{{ s.station_name }}</td><td>{{ s.district }}</td></tr>{% endfor %}</table>
+{% endblock %}

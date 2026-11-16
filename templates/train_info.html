@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block body %}
+<h1 class="page-title" style="color:#d58f4d">{{ t.train_name|upper }} ({{ t.train_number }})</h1>
+<p class="muted">{{ t.train_type.replace('_',' ').title() }} · Classes: {% for c in classes %}{{ c.class_code }} ({{ c.seats }} seats){{ ', ' if not loop.last }}{% endfor %}</p>
+<table><tr><th>#</th><th>Station</th><th>Arrival</th><th>Departure</th><th>Distance</th></tr>
+{% for s in stops %}<tr><td>{{ s.stop_order }}</td><td>{{ s.station_name }}</td>
+<td>{{ s.arrival_time.strftime('%I:%M %p') if s.arrival_time else '—' }}{{ ' (+1 day)' if s.day_offset and s.arrival_time }}</td>
+<td>{{ s.departure_time.strftime('%I:%M %p') if s.departure_time else '—' }}</td><td>{{ s.distance_km }} km</td></tr>{% endfor %}</table>
+<p><a href="{{ url_for('trains_page') }}">← All trains</a></p>{% endblock %}

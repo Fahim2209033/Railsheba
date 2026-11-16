@@ -1,0 +1,28 @@
+{% extends "base.html" %}{% block body %}
+<h1 class="page-title">{{ from_name }} → {{ to_name }} <span class="muted">· {{ d.strftime('%d %b %Y') }}</span></h1>
+{% if not trains %}<div class="card">No trains found for this route and date. <a href="{{ url_for('index') }}">Search again</a></div>{% endif %}
+{% for t in trains %}
+<div class="tcard">
+ <div class="thead"><div><h2>{{ t.train_name|upper }} ({{ t.train_number }})</h2>
+  <p class="trying">👥 <b>{{ t.trying }}+</b> users are trying to book ticket(s)</p></div>
+  <button class="chev" aria-label="show / hide" onclick="this.closest('.tcard').classList.toggle('closed')">⌃</button></div>
+ <div class="tbody">
+  <div class="tmid">
+   <div class="tl">
+    <div class="end"><b>{{ t.dep.strftime('%d %b, %I:%M %p')|upper }}</b><span>{{ t.from_station.split(' (')[0] }}</span></div>
+    <div class="line"><i></i><span>{{ t.duration }}</span></div>
+    <div class="end right"><b>{{ t.arr.strftime('%d %b, %I:%M %p')|upper }}</b><span>{{ t.to_station.split(' (')[0] }}</span></div>
+   </div>
+   <a class="details" href="{{ url_for('train_info', train_id=t.train_id) }}">
+    <svg width="34" height="34" viewBox="0 0 32 32"><rect x="14" y="3" width="3" height="27" fill="#d58f4d"/><path d="M17 5h10l3 3-3 3H17z" fill="#d58f4d"/><path d="M14 14H5l-3 3 3 3h9z" fill="#d58f4d"/></svg><b>Train Details</b></a>
+  </div>
+  <div class="classes">
+   {% for c in t.classes %}
+   <div class="cc {{ 'none' if c.free <= 0 }} {{ 'sel' if c.class_id == cls }}">
+    <div class="top"><h4>{{ c.class_code }}</h4><div class="price">৳{{ c.price }}</div>{% if c.has_vat %}<div class="vat">Including VAT</div>{% endif %}</div>
+    <div class="bot">Available Tickets<br>(Counter + Online)<div class="num">{{ c.free }}</div>
+     {% if c.free > 0 %}<a class="book" href="{{ url_for('trip', trip_id=t.trip_id, from_order=t.from_order, to_order=t.to_order, class_id=c.class_id) }}">BOOK NOW</a>{% endif %}</div>
+   </div>{% endfor %}
+  </div>
+ </div>
+</div>{% endfor %}{% endblock %}

@@ -1,0 +1,106 @@
+erDiagram
+    USERS ||--o{ BOOKINGS : makes
+    STATIONS ||--o{ TRAIN_STOPS : "is stop of"
+    STATIONS ||--o{ BOOKINGS : "boarding or destination"
+    TRAINS ||--|{ TRAIN_STOPS : "has route"
+    TRAINS ||--o{ TRIPS : "runs as"
+    TRAINS ||--|{ COACHES : has
+    SEAT_CLASSES ||--o{ COACHES : "class of"
+    SEAT_CLASSES ||--o{ FARE_RATES : "price of"
+    COACHES ||--|{ SEATS : contains
+    TRIPS ||--o{ BOOKINGS : "booked on"
+    TRIPS ||--o{ TICKETS : "sold for"
+    BOOKINGS ||--|{ TICKETS : "has 1 to 4"
+    SEATS ||--o{ TICKETS : "assigned to"
+    BOOKINGS ||--o{ PAYMENTS : "paid by"
+    TICKETS ||--o| REFUNDS : "may get"
+    PAYMENTS ||--o{ REFUNDS : "refunded via"
+
+    USERS { int user_id PK
+        string full_name
+        string email UK
+        string mobile UK
+        string password_hash
+        string nid UK
+        string role "PASSENGER or ADMIN" }
+    STATIONS { int station_id PK
+        string station_code UK
+        string station_name
+        string district }
+    TRAINS { int train_id PK
+        string train_number UK
+        string train_name
+        string train_type
+        int off_day
+        bool is_active }
+    TRAIN_STOPS { int train_id PK,FK
+        int stop_order PK
+        int station_id FK
+        time arrival_time
+        time departure_time
+        int day_offset
+        decimal distance_km }
+    SEAT_CLASSES { int class_id PK
+        string class_code UK
+        string class_name
+        bool has_vat }
+    FARE_RATES { int rate_id PK
+        string train_type
+        int class_id FK
+        decimal rate_per_km
+        decimal min_fare }
+    FARE_SETTINGS { int setting_id PK
+        decimal vat_percent
+        decimal service_charge
+        decimal child_discount_pct
+        int hold_minutes }
+    COACHES { int coach_id PK
+        int train_id FK
+        string coach_code
+        int class_id FK }
+    SEATS { int seat_id PK
+        int coach_id FK
+        int seat_number }
+    TRIPS { int trip_id PK
+        int train_id FK
+        date journey_date
+        string status }
+    BOOKINGS { int booking_id PK
+        string pnr UK
+        int user_id FK
+        int trip_id FK
+        int from_station_id FK
+        int to_station_id FK
+        string status
+        decimal subtotal
+        decimal vat_amount
+        decimal service_charge
+        decimal total_amount
+        timestamp expires_at }
+    TICKETS { int ticket_id PK
+        string ticket_no UK
+        int booking_id FK
+        int trip_id FK
+        int seat_id FK
+        int from_stop_order
+        int to_stop_order
+        string passenger_name
+        string passenger_type
+        decimal fare_amount
+        string status }
+    PAYMENTS { int payment_id PK
+        int booking_id FK
+        string method
+        string gateway_txn_id UK
+        decimal amount
+        string status }
+    CANCELLATION_RULES { int rule_id PK
+        int min_hours_before
+        int max_hours_before
+        decimal deduction_percent }
+    REFUNDS { int refund_id PK
+        int ticket_id FK,UK
+        int payment_id FK
+        decimal deduction_amount
+        decimal refund_amount
+        string status }

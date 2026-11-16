@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% block body %}
+<div class="search-card">
+ <h2>Payment</h2>
+ <p><b>{{ b.train_name }} ({{ b.train_number }})</b> · {{ b.from_station.split(' (')[0] }} → {{ b.to_station.split(' (')[0] }} · {{ b.journey_date.strftime('%d %b %Y') }} · PNR <b>{{ b.pnr }}</b></p>
+ <table>{% for k in tix %}<tr><td>{{ k.coach_code }}-{{ k.seat_number }}</td><td>{{ k.passenger_name }} ({{ k.passenger_type|lower }})</td><td>৳{{ k.fare_amount }}</td></tr>{% endfor %}
+  <tr><td colspan="2">VAT</td><td>৳{{ b.vat_amount }}</td></tr><tr><td colspan="2">Service charge</td><td>৳{{ b.service_charge }}</td></tr>
+  <tr><th colspan="2">Total</th><th>৳{{ b.total_amount }}</th></tr></table>
+ <p class="muted">Your seats are held for <b id="t">{{ left // 60 }}:{{ '%02d' % (left % 60) }}</b> minutes.</p>
+ <form method="post"><label>Pay with (demo payment, no real money)</label>
+  <div class="pm">{% for code, name in [('BKASH','bKash'),('NAGAD','Nagad'),('ROCKET','Rocket'),('UPAY','Upay'),('NEXUSPAY','NexusPay'),('CARD','Card')] %}
+   <label><input type="radio" name="method" value="{{ code }}" {{ 'checked' if loop.first }}><b>{{ name }}</b></label>{% endfor %}</div>
+  <button class="btn-main">Pay ৳{{ b.total_amount }}</button></form>
+</div>
+<script>let s={{ left }};const t=document.getElementById('t');
+ setInterval(()=>{s=Math.max(0,s-1);t.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');if(s==0)location.reload();},1000);</script>
+{% endblock %}

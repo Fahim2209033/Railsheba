@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block body %}
+<div class="paper {{ 'void' if k.status == 'CANCELLED' }}">
+ <div class="head"><b>🚆 Bangladesh Railway e-Ticket</b><span class="tag {{ k.status|lower }}">{{ k.status }}</span></div>
+ <dl>
+  <dt>Train</dt><dd>{{ k.train_name }} ({{ k.train_number }})</dd>
+  <dt>From</dt><dd>{{ k.from_station }} · {{ k.departure_time.strftime('%I:%M %p') }}</dd>
+  <dt>To</dt><dd>{{ k.to_station }} · {{ k.arrival_time.strftime('%I:%M %p') }}</dd>
+  <dt>Date of journey</dt><dd>{{ k.journey_date.strftime('%d %B %Y') }}</dd>
+  <dt>Class / Seat</dt><dd>{{ k.class_code }} · Coach {{ k.coach_code }}, Seat {{ k.seat_number }}</dd>
+  <dt>Passenger</dt><dd>{{ k.passenger_name }} ({{ k.passenger_type|lower }})</dd>
+  <dt>Fare</dt><dd>৳{{ k.fare_amount }}</dd>
+  <dt>PNR / Ticket no.</dt><dd>{{ k.pnr }} / {{ k.ticket_no }}</dd>
+ </dl>
+ <div class="qr">{{ qr|safe }}</div><div style="height:140px"></div>
+ <p class="muted">Carry a valid ID (NID / passport) during the journey. Demo ticket - not valid for travel.</p>
+</div>
+<p class="noprint" style="text-align:center"><button onclick="window.print()">Print ticket</button> <a class="btn light" href="{{ url_for('tickets') }}">Back</a></p>
+{% endblock %}

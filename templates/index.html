@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% block body %}
+<form class="search-card" id="sf" action="{{ url_for('search') }}" method="get">
+ <div class="two">
+  <div class="field"><label>From</label><input name="from" list="st" placeholder="From Station" autocomplete="off" required></div>
+  <div class="field"><label>To</label><input name="to" list="st" placeholder="To Station" autocomplete="off" required></div>
+ </div>
+ <div class="two">
+  <div class="field"><label>Date of Journey</label><input type="date" name="date" min="{{ today }}" max="{{ last_day }}" required></div>
+  <div class="field"><label>Choose Class</label>
+   <select name="class_id" required><option value="">Choose a Class</option>{% for c in classes %}<option value="{{ c.class_id }}">{{ c.class_code }}</option>{% endfor %}</select></div>
+ </div>
+ <datalist id="st">{% for s in stations %}<option value="{{ s.station_name }}">{% endfor %}</datalist>
+ <button class="btn-main" id="go" disabled>Search Trains</button>
+</form>
+<p class="hint">Tickets can be bought up to 10 days before the journey.</p>
+<script>
+ const f=document.getElementById('sf'),b=document.getElementById('go');
+ function check(){b.disabled=![...f.elements].filter(e=>e.name).every(e=>e.value.trim());}
+ f.addEventListener('input',check);f.addEventListener('change',check);check();
+</script>{% endblock %}

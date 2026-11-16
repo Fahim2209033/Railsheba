@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block body %}
+<h1 class="page-title">Train Information</h1>
+<table><tr><th>No.</th><th>Train</th><th>Type</th><th>Route</th><th>Departs</th><th></th></tr>
+{% for t in rows %}<tr><td>{{ t.train_number }}</td><td><b>{{ t.train_name }}</b></td><td>{{ t.train_type.replace('_',' ').title() }}</td>
+<td>{{ t.origin.split(' (')[0] }} → {{ t.destination.split(' (')[0] }}</td><td>{{ t.departs.strftime('%I:%M %p') }}</td>
+<td><a class="btn light" href="{{ url_for('train_info', train_id=t.train_id) }}">Route</a></td></tr>{% endfor %}</table>{% endblock %}

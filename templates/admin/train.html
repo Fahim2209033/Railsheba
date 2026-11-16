@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% block body %}{% include "admin/_nav.html" %}
+<h1>{{ t.train_name }} ({{ t.train_number }})</h1>
+<h2>Route</h2>
+<table><tr><th>#</th><th>Station</th><th>Arr</th><th>Dep</th><th>Day+</th><th>km</th></tr>
+{% for s in stops %}<tr><td>{{ s.stop_order }}</td><td>{{ s.station_name }}</td><td>{{ s.arrival_time or '—' }}</td><td>{{ s.departure_time or '—' }}</td><td>{{ s.day_offset }}</td><td>{{ s.distance_km }}</td></tr>{% endfor %}</table>
+<form class="card grid" method="post" action="{{ url_for('admin.add_stop', tid=t.train_id) }}">
+ <label>Order<input type="number" name="stop_order" value="{{ next_order }}" min="1" required></label>
+ <label>Station<select name="station_id">{% for s in stations %}<option value="{{ s.station_id }}">{{ s.station_name }}</option>{% endfor %}</select></label>
+ <label>Arrival<input type="time" name="arrival_time"></label><label>Departure<input type="time" name="departure_time"></label>
+ <label>Day offset<input type="number" name="day_offset" value="0" min="0"></label>
+ <label>Distance (km)<input type="number" step="0.1" name="distance_km" required></label><button>Add stop</button></form>
+<h2>Coaches</h2>
+<table><tr><th>Code</th><th>Class</th><th>Seats</th></tr>
+{% for c in coaches %}<tr><td>{{ c.coach_code }}</td><td>{{ c.class_name }}</td><td>{{ c.seats }}</td></tr>{% endfor %}</table>
+<form class="card grid" method="post" action="{{ url_for('admin.add_coach', tid=t.train_id) }}">
+ <label>Code<input name="coach_code" placeholder="KA" required></label>
+ <label>Class<select name="class_id">{% for c in classes %}<option value="{{ c.class_id }}">{{ c.class_name }}</option>{% endfor %}</select></label>
+ <label>Seats<input type="number" name="seat_count" value="60" min="1" max="120" required></label><button>Add coach</button></form>
+{% endblock %}

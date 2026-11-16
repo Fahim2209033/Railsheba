@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block body %}{% include "admin/_nav.html" %}
+<h1>Dashboard</h1>
+<div class="grid">
+ <div class="card"><b>{{ s.users }}</b><br>Passengers</div><div class="card"><b>{{ s.trains }}</b><br>Active trains</div>
+ <div class="card"><b>{{ s.bookings }}</b><br>Confirmed bookings</div><div class="card"><b>৳{{ s.revenue }}</b><br>Revenue</div>
+ <div class="card"><b>{{ s.pending_refunds }}</b><br>Pending refunds</div></div>
+<h2>Recent bookings</h2>
+<table><tr><th>PNR</th><th>Passenger</th><th>Train</th><th>Date</th><th>Total</th><th>Status</th></tr>
+{% for b in recent %}<tr><td>{{ b.pnr }}</td><td>{{ b.full_name }}</td><td>{{ b.train_name }}</td><td>{{ b.journey_date }}</td><td>৳{{ b.total_amount }}</td><td>{{ b.status }}</td></tr>{% endfor %}</table>
+{% endblock %}

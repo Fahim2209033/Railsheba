@@ -1,0 +1,28 @@
+{% extends "base.html" %}{% block body %}
+<div class="tcard"><div class="thead"><div><h2>{{ i.train_name|upper }} ({{ i.train_number }})</h2>
+ <p class="trying">{{ i.from_station.split(' (')[0] }} → {{ i.to_station.split(' (')[0] }} · {{ i.journey_date.strftime('%d %b %Y') }} · {{ i.departure_time.strftime('%I:%M %p') }} · <b>{{ i.class_code }}</b></p></div>
+ <div style="text-align:right"><div class="muted">Price per adult{% if i.has_vat %} (incl. VAT){% endif %}</div><b style="font-size:1.5rem;color:#006a4e">৳{{ price }}</b></div></div></div>
+<form action="{{ url_for('book') }}" method="post">
+ <input type="hidden" name="trip_id" value="{{ i.trip_id }}"><input type="hidden" name="from_order" value="{{ fo }}">
+ <input type="hidden" name="to_order" value="{{ to }}"><input type="hidden" name="class_id" value="{{ cls }}">
+ <p class="legend"><span><i></i>Available</span><span><i class="s"></i>Selected</span><span><i class="b"></i>Booked</span><span class="muted">Choose up to 4 seats</span></p>
+ {% for coach, items in seats|groupby('coach_code') %}
+ <div class="coach"><h3>Coach {{ coach }}</h3><div class="seats">
+  {% for s in items %}<label class="seat"><input type="checkbox" name="seat_id" value="{{ s.seat_id }}" data-label="{{ coach }}-{{ s.seat_number }}" {{ 'disabled' if s.booked }}><span>{{ s.seat_number }}</span></label>{% endfor %}
+ </div></div>{% endfor %}
+ <div class="card"><h3 style="margin-top:0">Passenger information</h3>
+  <div id="pax"><p class="muted" id="none">Select a seat to enter passenger details. Children (5-12) get {{ child_pct|int }}% off.</p></div>
+  <button class="btn-main" id="go" disabled>Continue to payment</button></div>
+</form>
+<script>
+ const pax=document.getElementById('pax'),go=document.getElementById('go');
+ document.querySelectorAll('.seat input').forEach(b=>b.addEventListener('change',()=>{
+  const n=document.querySelectorAll('.seat input:checked').length;
+  if(b.checked&&n>4){b.checked=false;alert('You can book at most 4 seats at a time.');return;}
+  const id='row_'+b.value,old=document.getElementById(id);
+  if(b.checked){const d=document.createElement('div');d.className='row';d.id=id;
+   d.innerHTML='<b>'+b.dataset.label+'</b><input name="name_'+b.value+'" placeholder="Passenger name" required><select name="ptype_'+b.value+'"><option value="ADULT">Adult</option><option value="CHILD">Child (5-12)</option></select>';
+   pax.appendChild(d);}else if(old){old.remove();}
+  const c=document.querySelectorAll('.seat input:checked').length;
+  document.getElementById('none').style.display=c?'none':'block';go.disabled=c===0;}));
+</script>{% endblock %}

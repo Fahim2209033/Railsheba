@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block body %}
+<form class="search-card narrow" method="post">
+ <h2>{{ 'Create your account' if mode == 'register' else 'Login' }}</h2>
+ {% if mode == 'register' %}<div class="field"><label>Full name</label><input name="full_name" required></div>
+ <div class="field"><label>Email (optional)</label><input type="email" name="email"></div>
+ <div class="field"><label>NID (optional)</label><input name="nid" pattern="\d{10}|\d{13}|\d{17}" placeholder="10, 13 or 17 digits"></div>{% endif %}
+ <div class="field"><label>Mobile</label><input name="mobile" placeholder="01XXXXXXXXX" required></div>
+ <div class="field"><label>Password</label><input type="password" name="password" minlength="6" required></div>
+ <button class="btn-main">{{ 'Register' if mode == 'register' else 'Login' }}</button>
+ {% if mode == 'login' %}<p class="hint">Demo logins: 01700000001 / password123 &nbsp;·&nbsp; admin 01700000000</p>{% endif %}
+</form>{% endblock %}

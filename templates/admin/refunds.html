@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block body %}{% include "admin/_nav.html" %}
+<h1>Refund requests</h1>
+{% if not rows %}<p>No refunds yet.</p>{% endif %}
+<table><tr><th>Ticket</th><th>Passenger</th><th>Account</th><th>Deducted</th><th>Refund</th><th>Via</th><th>Status</th><th></th></tr>
+{% for r in rows %}<tr><td>{{ r.ticket_no }}</td><td>{{ r.passenger_name }}</td><td>{{ r.full_name }} {{ r.mobile }}</td><td>৳{{ r.deduction_amount }}</td><td>৳{{ r.refund_amount }}</td><td>{{ r.method }}</td><td>{{ r.status }}</td>
+<td>{% if r.status == 'REQUESTED' %}<form method="post" action="{{ url_for('admin.process_refund', rid=r.refund_id) }}"><button>Mark processed</button></form>{% endif %}</td></tr>{% endfor %}</table>
+{% endblock %}
